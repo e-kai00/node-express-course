@@ -2,8 +2,8 @@ const Product = require('../models/product')
 
 const getAllProductsStatic = async (req, res) => {
     // syntax to add multiple sort params - devided by space
-    // const products = await Product.find({}).sort('-name price') 
-    const products = await Product.find({})
+    const products = await Product.find({price: {$gt: 50}})
+    .sort('price')
     .select('name price')
     .limit(4)
     .skip(3)
@@ -11,7 +11,7 @@ const getAllProductsStatic = async (req, res) => {
 }
 
 const getAllProducts = async (req, res) => {
-    const {featured, company, name, sort, fields} = req.query;
+    const {featured, company, name, sort, fields, numericFilters} = req.query;
     const queryObject = {};
 
     if (featured) {
@@ -26,7 +26,24 @@ const getAllProducts = async (req, res) => {
         queryObject.name = {$regex: name, $options: 'i'}  // query operators; comes from MongoBD
     }
 
-    // console.log(queryObject)
+    if (numericFilters) {
+        // user-friendly oprators
+        const operatorMap = {
+            '>': '$gt',
+            '>=': '$gte',
+            '=': '$eq',
+            '<': '$lt',
+            '<=': '$lte',
+        }
+
+        // converts to Mongoose operators 
+        const regEx =  /\b(>|>=|=|<|<=)\b/g
+        let filters = numericFilters.replace(regEx, (match) => `-${operatorMap[match]}-`)
+
+        console.log(filters)
+    }
+
+    console.log(queryObject)
 
     let result = Product.find(queryObject)
     // sort  -- Mongoose query
