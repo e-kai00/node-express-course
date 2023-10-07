@@ -1,5 +1,5 @@
 const { use } = require("express/lib/router")
-const CustomAPIError = require('../errors/custom-error')
+const {BadRequestError} = require('../errors')
 const jwt = require('jsonwebtoken')
 
 
@@ -7,7 +7,7 @@ const login = async (req, res) => {
    const {username, password} = req.body
    
    if (!username || !password) {
-    throw new CustomAPIError('Please provide username and password', 400)
+    throw new BadRequestError('Please provide username and password')
    }
    // for demo; id will be provided by DB
    const id = new Date().getDate()
@@ -20,7 +20,6 @@ const login = async (req, res) => {
 
 
 const dashboard = async (req, res) => {
-    console.log(req.user)
 
     const luckyNumber = Math.floor(Math.random()*100)
     res.status(200).json({msg: `Hello, ${req.user.username}`, secret: `Here is ur secret data. Your lucky number is ${luckyNumber}` })
