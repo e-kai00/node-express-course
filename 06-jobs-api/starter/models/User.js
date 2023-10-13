@@ -32,7 +32,7 @@ UserSchema.pre('save', async function() {
     this.password = await bcrypt.hash(this.password, salt);
 })
 
-// generate tocken ('instance' method from mangoose)
+// generate token ('instance' method from mangoose)
 UserSchema.methods.createJWT = function() {
     return jwt.sign({userID: this._id, name: this.name}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_LIFETIME})
 }

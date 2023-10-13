@@ -7,9 +7,9 @@ const { use } = require('express/lib/router')
 const register = async (req, res) => {
     // create user
     const user = await User.create({...req.body})
-    const tocken = user.createJWT()
+    const token = user.createJWT()
 
-    res.status(StatusCodes.CREATED).json({user: {name: user.name}, tocken})
+    res.status(StatusCodes.CREATED).json({user: {name: user.name}, token})
 }
 
 
@@ -29,8 +29,8 @@ const login = async (req, res) => {
         throw new UnauthenticatedError('Invalid Credentials')
     }
 
-    const tocken = user.createJWT()
-    res.status(StatusCodes.OK).json({user: {name: user.name}, tocken})
+    const token = user.createJWT()
+    res.status(StatusCodes.OK).json({user: {name: user.name}, token})
 }
 
 
