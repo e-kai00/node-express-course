@@ -1,21 +1,23 @@
-const getAllJobs = (req, res) => {
-    req.send('get all jobs')
+
+
+const getAllJobs = async (req, res) => {
+    res.send('get all jobs')
 }
 
-const getJob = (req, res) => {
-    req.send('get a single job')
+const getJob = async (req, res) => {
+    res.send('get a single job')
 }
 
-const createJob = (req, res) => {
-    req.send('create a job')
+const createJob = async (req, res) => {
+    res.json(req.user)
 }
 
-const updateJob = (req, res) => {
-    req.send('update job')
+const updateJob = async (req, res) => {
+    res.send('update job')
 }
 
-const deleteJob = (req, res) => {
-    req.send('delete job')
+const deleteJob = async (req, res) => {
+    res.send('delete job')
 }
 
 
