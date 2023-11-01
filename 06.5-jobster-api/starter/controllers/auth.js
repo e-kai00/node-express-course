@@ -2,6 +2,7 @@ const User = require('../models/User')
 const { StatusCodes } = require('http-status-codes')
 const { BadRequestError, UnauthenticatedError } = require('../errors')
 
+
 const register = async (req, res) => {
   const user = await User.create({ ...req.body })
   const token = user.createJWT()
@@ -45,9 +46,9 @@ const login = async (req, res) => {
    });
 }
 
-
 const updateUser = async (req, res) => {
   const {email, name, lastName, location} = req.body;
+  console.log(req.user)
 
   if (!email || !name || !lastName || !location) {
     throw new BadRequestError('Please provide all values')
