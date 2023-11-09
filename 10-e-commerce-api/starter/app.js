@@ -5,9 +5,12 @@ const app = express();
 const connectDB = require('./db/connect');
 const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
+// packages
+const morgan = require('morgan')
 
 
 // middleware before routes
+app.use(morgan('tiny'))
 app.use(express.json());
 
 // routes
