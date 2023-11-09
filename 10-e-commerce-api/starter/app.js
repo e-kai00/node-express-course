@@ -15,7 +15,7 @@ app.use(morgan('tiny'))
 app.use(express.json());
 
 // routes
-app.use('api/v1/auth', authRoutes);
+app.use('/api/v1/auth', authRoutes);
 app.get('/', (req, res) => {
     res.send('e-commerce home page')
 })
