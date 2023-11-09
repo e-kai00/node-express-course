@@ -1,7 +1,23 @@
 require('dotenv').config();
+require('express-async-errors');
 const express = require('express');
 const app = express();
 const connectDB = require('./db/connect');
+const notFoundMiddleware = require('./middleware/not-found');
+const errorHandlerMiddleware = require('./middleware/error-handler');
+
+
+// middleware before routes
+app.use(express.json());
+
+// routes
+app.get('/', (req, res) => {
+    res.send('e-commerce home page')
+})
+
+// error handler needs to be the last one
+app.use(notFoundMiddleware);
+app.use(errorHandlerMiddleware);
 
 
 const port = process.env.PORT || 5000
