@@ -14,7 +14,7 @@ const cookieParser = require('cookie-parser');
 // middleware before routes
 app.use(morgan('tiny'));
 app.use(express.json());
-app.use(cookieParser());
+app.use(cookieParser(process.env.JWT_SECRET));
 
 // routes
 app.use('/api/v1/auth', authRoutes);
@@ -23,7 +23,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/api/v1', (req, res) => {
-    console.log(req.cookies)
+    console.log(req.signedCookies)
     res.send('e-commerce home page')
 })
 

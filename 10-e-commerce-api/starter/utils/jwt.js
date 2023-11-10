@@ -22,6 +22,10 @@ const attachCookiesToResponse = ({res, user}) => {
     res.cookie('token', token, {
         httpOnly: true,
         expires: new Date(Date.now() + oneDay),
+        // set NODE_ENV to use property in dev mode (http)
+        secure: process.env.NODE_ENV === 'production',
+        // manually add signature in app.js: app.use(cookieParser(process.env.JWT_SECRET));
+        signed: true,
     });
 }
 
