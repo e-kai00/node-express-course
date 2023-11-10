@@ -28,7 +28,25 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-    res.send('login user')
+    const {email, password} = req.body;
+    if (!email || !password) {
+        throw new CustomError.BadRequestError('Please enter valid email and password');
+    };
+
+    const user = await User.findOne({email});
+    if (!user) {
+        throw new CustomError.UnauthenticatedError('Invalid Credentials.');
+    };
+
+    const isPasswordValid = await user.comparePassword(password);
+    if (!password) {
+        throw new CustomError.UnauthenticatedError('Incorrect password');
+    };
+
+    const tokenUser = {name: user.name, userId: user._id, role: user.role};
+    attachCookiesToResponse({res, user: tokenUser});
+    res.status(StatusCodes.OK).json({user: tokenUser});
+
 };
 
 const logout = async (req, res) => {
