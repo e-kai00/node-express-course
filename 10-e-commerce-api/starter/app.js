@@ -6,6 +6,7 @@ const connectDB = require('./db/connect');
 const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
 const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes'); 
 // packages
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
@@ -18,6 +19,7 @@ app.use(cookieParser(process.env.JWT_SECRET));
 
 // routes
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/users', userRoutes);
 app.get('/', (req, res) => {
     res.send('e-commerce home page')
 });
