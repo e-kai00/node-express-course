@@ -7,16 +7,23 @@ const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
 const authRoutes = require('./routes/authRoutes');
 // packages
-const morgan = require('morgan')
+const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
 
 
 // middleware before routes
-app.use(morgan('tiny'))
+app.use(morgan('tiny'));
 app.use(express.json());
+app.use(cookieParser());
 
 // routes
 app.use('/api/v1/auth', authRoutes);
 app.get('/', (req, res) => {
+    res.send('e-commerce home page')
+});
+
+app.get('/api/v1', (req, res) => {
+    console.log(req.cookies)
     res.send('e-commerce home page')
 })
 
