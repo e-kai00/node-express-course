@@ -39,7 +39,7 @@ const login = async (req, res) => {
     };
 
     const isPasswordValid = await user.comparePassword(password);
-    if (!password) {
+    if (!isPasswordValid) {
         throw new CustomError.UnauthenticatedError('Incorrect password');
     };
 
