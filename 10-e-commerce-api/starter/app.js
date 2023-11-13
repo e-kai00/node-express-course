@@ -8,6 +8,7 @@ const errorHandlerMiddleware = require('./middleware/error-handler');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
+const reviewRoutes = require('./routes/reviewRoutes');
 // packages
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
@@ -25,6 +26,7 @@ app.use(fileUpload());
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/products', productRoutes);
+app.use('/api/v1/reviews', reviewRoutes);
 app.get('/', (req, res) => {
     res.send('e-commerce home page')
 });
