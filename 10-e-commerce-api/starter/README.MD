@@ -272,7 +272,7 @@
 - [x] check permissions
 - [x] set review properties equal to rating, title, comment
 - [x] use await review.save()
-- [] send back 200
+- [x] send back 200
 
 #### Populate
 
@@ -342,10 +342,10 @@
 
 #### Create Docs
 
-- [] [Docgen Library] (https://github.com/thedevsaddam/docgen)
-- [] Export Postman Collection
-- [] docgen build -i fileName.json -o index.html
-- [] create index.html in public
+- [x] [Docgen Library] (https://github.com/thedevsaddam/docgen)
+- [x] Export Postman Collection
+- [x] docgen build -i fileName.json -o index.html
+- [x] create index.html in public
 
 #### Security Packages
 
