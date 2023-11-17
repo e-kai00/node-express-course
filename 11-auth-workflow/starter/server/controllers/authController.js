@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const Token = require('../models/Token');
 const { StatusCodes } = require('http-status-codes');
 const CustomError = require('../errors');
 const { attachCookiesToResponse, createTokenUser, sendVerificationEmail } = require('../utils');
@@ -6,6 +7,7 @@ const { use } = require('express/lib/router');
 const crypto = require('crypto');
 
 
+// --------------------------------------------------Register
 const register = async (req, res) => {
   const { email, name, password } = req.body;
 
@@ -22,6 +24,14 @@ const register = async (req, res) => {
   const user = await User.create({ name, email, password, role, verificationToken });
 
   const origin = 'http://localhost:3000'
+  // const newOrigin = 'https://react-node-user-workflow-front-end.netlify.app';
+
+  // const tempOrigin = req.get('origin');
+  // const protocol = req.protocol;
+  // const host = req.get('host');
+  // const forwardedHost = req.get('x-forwarded-host');
+  // const forwardedProtocol = req.get('x-forwarded-proto');
+
   await sendVerificationEmail({
     name: user.name,
     email: user.email,
@@ -36,6 +46,7 @@ const register = async (req, res) => {
     })
 };
 
+// --------------------------------------------------Verify Email
 const verifyEmail = async (req, res) => {
   const {verificationToken, email} = req.body;
 
@@ -54,8 +65,9 @@ const verifyEmail = async (req, res) => {
 
   await user.save();
   res.status(StatusCodes.OK).json({msg: 'email verified'});
-}
+};
 
+// --------------------------------------------------Login
 const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -78,12 +90,24 @@ const login = async (req, res) => {
   }
 
   const tokenUser = createTokenUser(user);
-  attachCookiesToResponse({ res, user: tokenUser });
 
-  res.status(StatusCodes.OK).json({ user: tokenUser });
+  // create refresh token
+  let refreshToken = '';
+
+  // check for existing token
+
+  refreshToken = crypto.randomBytes(40).toString('hex');
+  const userAgent = req.headers['user-agent'];
+  const ip = req.ip; 
+  const userToken = {refreshToken, userAgent, ip, user: user._id};
+  const token = await Token.create(userToken);
+
+  // attachCookiesToResponse({ res, user: tokenUser });
+
+  res.status(StatusCodes.OK).json({ user: tokenUser, token });
 };
 
-
+// --------------------------------------------------Logout
 const logout = async (req, res) => {
   res.cookie('token', 'logout', {
     httpOnly: true,
