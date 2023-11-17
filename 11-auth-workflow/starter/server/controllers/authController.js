@@ -1,7 +1,7 @@
 const User = require('../models/User');
 const { StatusCodes } = require('http-status-codes');
 const CustomError = require('../errors');
-const { attachCookiesToResponse, createTokenUser } = require('../utils');
+const { attachCookiesToResponse, createTokenUser, sendVerificationEmail } = require('../utils');
 const { use } = require('express/lib/router');
 const crypto = require('crypto');
 
@@ -21,14 +21,40 @@ const register = async (req, res) => {
   const verificationToken = crypto.randomBytes(40).toString('hex');
   const user = await User.create({ name, email, password, role, verificationToken });
 
+  const origin = 'http://localhost:3000'
+  await sendVerificationEmail({
+    name: user.name,
+    email: user.email,
+    verificationToken: user.verificationToken,
+    origin
+  });
+
   // send verification tocken back only while testing in Postman
   res.status(StatusCodes.CREATED)
     .json({
       msg: 'Success! Please check your email to varify it.', 
-      verificationToken: user.verificationToken,
     })
 };
 
+const verifyEmail = async (req, res) => {
+  const {verificationToken, email} = req.body;
+
+  const user = await User.findOne({email})
+  if (!user ) {
+    throw new CustomError.UnauthenticatedError(`User does not exist.`);
+  };
+
+  if (verificationToken !== user.verificationToken) {
+    throw new CustomError.UnauthenticatedError(`Wrong token.`);
+  };
+
+  user.isVerified = true;
+  user.verified = Date.now();
+  user.verificationToken = '';
+
+  await user.save();
+  res.status(StatusCodes.OK).json({msg: 'email verified'});
+}
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -70,4 +96,5 @@ module.exports = {
   register,
   login,
   logout,
+  verifyEmail
 };
