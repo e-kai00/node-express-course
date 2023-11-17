@@ -100,11 +100,11 @@ const login = async (req, res) => {
   const userAgent = req.headers['user-agent'];
   const ip = req.ip; 
   const userToken = {refreshToken, userAgent, ip, user: user._id};
-  const token = await Token.create(userToken);
+  await Token.create(userToken);
 
-  // attachCookiesToResponse({ res, user: tokenUser });
+  attachCookiesToResponse({ res, user: tokenUser, refreshToken });
 
-  res.status(StatusCodes.OK).json({ user: tokenUser, token });
+  res.status(StatusCodes.OK).json({ user: tokenUser });
 };
 
 // --------------------------------------------------Logout
