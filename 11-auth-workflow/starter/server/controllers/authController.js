@@ -2,6 +2,7 @@ const User = require('../models/User');
 const { StatusCodes } = require('http-status-codes');
 const CustomError = require('../errors');
 const { attachCookiesToResponse, createTokenUser } = require('../utils');
+const { use } = require('express/lib/router');
 
 
 const register = async (req, res) => {
@@ -39,10 +40,16 @@ const login = async (req, res) => {
   if (!user) {
     throw new CustomError.UnauthenticatedError('Invalid Credentials');
   }
+
   const isPasswordCorrect = await user.comparePassword(password);
   if (!isPasswordCorrect) {
     throw new CustomError.UnauthenticatedError('Invalid Credentials');
   }
+
+  if (!user.isVerified) {
+    throw new CustomError.UnauthenticatedError('Please verify your account.');
+  }
+
   const tokenUser = createTokenUser(user);
   attachCookiesToResponse({ res, user: tokenUser });
 
